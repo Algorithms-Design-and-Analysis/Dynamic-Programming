@@ -5,13 +5,17 @@ def calcular_combinaciones(n):
     combinaciones = list(itertools.product(caracteres, repeat=n))
     return combinaciones
 
-def contar_configuraciones_contador(configuracion_actual, forma_movimiento):
-    return []
-
 def extraer_respuesta(matriz):
     pass
 
-def contar_configuraciones(formaMovimientos_cantidadMovimientos, ranas_cantidad, configuracion_actual, movimientos_realizar):
+def contar_configuraciones_contador(configuracion_actual, forma_movimiento): 
+
+    configuraciones_nuevas_encontradas = []
+    
+
+    return configuraciones_nuevas_encontradas
+
+def contar_configuraciones(formaMovimientos_cantidadMovimientos, ranas_cantidad, configuracion_inicial, movimientos_realizar):
     
     
     # Calcula todas las permutaciones de movimientos posibles para cada rana, por ejemplo 
@@ -22,21 +26,31 @@ def contar_configuraciones(formaMovimientos_cantidadMovimientos, ranas_cantidad,
     # de movimientos realizados con esa forma. El caso base en la matriz es la columna 0
     # que contiene la configuracion inicial ya que solo existe un configuración sin hacer 
     # movimientos (la inicial)
-    formaMovimientos_cantidadMovimientos = [ [[configuracion_actual] if i == 0 else [] for i in range(movimientos_realizar+1)] for _ in range(len(formas_movimientos)) ]
+    formaMovimientos_cantidadMovimientos = [ [configuracion_inicial, []] for _ in range(len(formas_movimientos)) ]
 
-    # Iteracion sobre las formas de moverse
-    for i in range(len(formaMovimientos_cantidadMovimientos)):
-        # Iteracion sobre la cantidad de movimientos con esa forma de moverse
-        for movimiento_realizar in range(1, movimientos_realizar+1):
-            formaMovimientos_cantidadMovimientos[i][movimiento_realizar] = contar_configuraciones_contador(formaMovimientos_cantidadMovimientos[i][movimiento_realizar-1], formas_movimientos[i])
+    # Contiene las configuraciones validas entradas. Se actualiza despues de cada iteración
+    # en caso de que se hayan encontrado nuevas configuraciones y sirve para validar si una
+    # configuración ya fue encontrada para no repetirla.
+    print(formaMovimientos_cantidadMovimientos)
+    fila_indice = 0
+    while fila_indice <= len(formas_movimientos)-1:
+        movimientos_realizados = 1
+        while movimientos_realizados <= movimientos_realizar:
+            resultado_anterior = formaMovimientos_cantidadMovimientos[fila_indice][0]
+            resultado_actual = contar_configuraciones_contador(resultado_anterior, formas_movimientos[fila_indice])
+            formaMovimientos_cantidadMovimientos[fila_indice][0] = resultado_actual
+            movimientos_realizados += 1
+        
+        fila_indice += 1
 
     # Busca entre las formas de moverse, cual es la que da más configuraciones despues de
     # realizar los m movimientos
-    return extraer_respuesta(formaMovimientos_cantidadMovimientos)
+    #return extraer_respuesta(formaMovimientos_cantidadMovimientos)
+    return formaMovimientos_cantidadMovimientos
 
 
 
 
 
     
-print(contar_configuraciones([], 2, ["r", "p", "r", "p"], 0, 2))
+print(contar_configuraciones([], 2, ["r", "p", "r", "p"], 2))
